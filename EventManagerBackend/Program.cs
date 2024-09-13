@@ -1,10 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using EventManagerBackend.Models;
+using DotNetEnv;
+
+// Carrega as variáveis de ambiente do arquivo .env
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configurar o Entity Framework Core com MySQL
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = $"Server={Environment.GetEnvironmentVariable("MYSQL_DB_HOST")};" +
+                       $"Database={Environment.GetEnvironmentVariable("MYSQL_DB_NAME")};" +
+                       $"User={Environment.GetEnvironmentVariable("MYSQL_DB_USER")};" +
+                       $"Password={Environment.GetEnvironmentVariable("MYSQL_DB_PASSWORD")};";
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // Add services to the container.
