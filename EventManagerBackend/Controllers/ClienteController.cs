@@ -23,10 +23,10 @@ namespace EventManagerBackend.Controllers
             return Ok(clientes);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetClienteById(string id) 
+        [HttpGet("{usuario}")]
+        public async Task<IActionResult> GetClienteByUsuario(string usuario) 
         {
-            var cliente = await _clienteService.GetClienteById(id);
+            var cliente = await _clienteService.GetClienteById(usuario);
             if (cliente == null)
             {
                 return NotFound();
@@ -41,25 +41,65 @@ namespace EventManagerBackend.Controllers
             {
                 return BadRequest();
             }
-            await _clienteService.AddCliente(cliente);
-            return CreatedAtAction(nameof(GetClienteById), new { usuario = cliente.Usuario }, cliente);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCliente(string id, [FromBody] Cliente cliente)
-        {
-            if (id != cliente.Usuario)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
-            await _clienteService.UpdateCliente(cliente);
-            return NoContent();
+            try
+            {
+                await _clienteService.AddCliente(cliente);
+                return CreatedAtAction(nameof(GetClienteByUsuario), new { usuario = cliente.Usuario }, cliente);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Ocorreu um erro interno no servidor.");
+            }
+
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(string id)
+        [HttpPut("{usuario}")]
+        public async Task<IActionResult> UpdateCliente(string usuario, [FromBody] Cliente cliente)
         {
-            await _clienteService.DeleteCliente(id);
+            if (usuario != cliente.Usuario)
+            {
+                return BadRequest("O nome de usuário não pode ser alterado.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await _clienteService.UpdateCliente(cliente);
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (InvalidOperationException e) 
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e) 
+            {
+                return StatusCode(500, "Ocorreu um erro interno no servidor.");
+            }
+            
+        }
+
+        [HttpDelete("{usuario}")]
+        public async Task<IActionResult> DeleteCliente(string usuario)
+        {
+            await _clienteService.DeleteCliente(usuario);
             return NoContent();
         }
     }

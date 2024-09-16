@@ -15,9 +15,9 @@ namespace EventManagerBackend.Repositories
         {
             return await _context.Clientes.ToListAsync();
         }
-        public async Task<Cliente> GetClienteById(string id)
+        public async Task<Cliente> GetClienteByUsuario(string usuario)
         {
-            return await _context.Clientes.FindAsync(id);
+            return await _context.Clientes.FirstOrDefaultAsync(c => c.Usuario == usuario);
         }
         public async Task AddCliente(Cliente cliente)
         {
@@ -29,14 +29,15 @@ namespace EventManagerBackend.Repositories
             _context.Clientes.Update(cliente);
             await _context.SaveChangesAsync();
         }
-        public async Task DeleteCliente(string id)
+        public async Task DeleteCliente(string usuario)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await GetClienteByUsuario(usuario);
             if (cliente != null)
             {
                 _context.Clientes.Remove(cliente);
                 await _context.SaveChangesAsync();
             }
         }
+
     }
 }
