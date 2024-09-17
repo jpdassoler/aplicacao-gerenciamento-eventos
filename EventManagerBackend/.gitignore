@@ -1,4 +1,4 @@
 .env
 # ignore bin and obj folders
-Aplication/src/Domain/bin/
-Aplication/src/Domain/obj/
+bin/
+obj/
