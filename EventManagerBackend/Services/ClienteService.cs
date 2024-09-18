@@ -47,7 +47,7 @@ namespace EventManagerBackend.Services
             //Validação campos obrigatórios
             if (String.IsNullOrEmpty(cliente.Usuario))
             {
-                throw new ArgumentException("Usuário é obrigatório");
+                throw new ArgumentException("Usuário é obrigatório.");
             }
             //Verifica se o usuário existe na base
             var existingCliente = await _clienteRepository.GetClienteByUsuario(cliente.Usuario);
@@ -58,7 +58,7 @@ namespace EventManagerBackend.Services
             //Verifica se há tentativa de alterar o campo Usuário
             if (existingCliente.Usuario != cliente.Usuario)
             {
-                throw new ArgumentException("O nome de usuário não pode ser alterado");
+                throw new ArgumentException("O nome de usuário não pode ser alterado.");
             }
             existingCliente.Senha = cliente.Senha;
             existingCliente.Telefone = cliente.Telefone;

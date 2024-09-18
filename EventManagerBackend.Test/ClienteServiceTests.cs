@@ -85,7 +85,58 @@ namespace EventManagerBackend.Test
         #endregion
 
         #region Testes de falha
+        [Test]
+        public void AddCliente_ShouldThrowArgumentException_WhenUsuarioNaoInformado()
+        {
+            var cliente = new Cliente { Nome = "Fulano de Tal", Senha = "xpto" };
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.AddCliente(cliente));
+            Assert.AreEqual("Usuário é obrigatório.", ex.Message);
+        }
 
+        [Test]
+        public void AddCliente_ShouldThrowArgumentException_WhenSenhaNaoInformada()
+        {
+            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Fulano de Tal" };
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.AddCliente(cliente));
+            Assert.AreEqual("Senha é obrigatória.", ex.Message);
+        }
+
+        [Test]
+        public void AddCliente_ShouldThrowArgumentException_WhenNomeNaoInformado()
+        {
+            var cliente = new Cliente { Usuario = "usuarioTeste", Senha = "xpto" };
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.AddCliente(cliente));
+            Assert.AreEqual("Nome é obrigatório.", ex.Message);
+        }
+
+        [Test]
+        public void AddCliente_ShouldThrowArgumentException_WhenUsuarioAlreadyExists()
+        {
+            var clienteExistente = new Cliente { Usuario = "usuarioExistente", Nome = "Fulano de Tal", Senha = "xpto" };
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(clienteExistente.Usuario)).ReturnsAsync(clienteExistente);
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.AddCliente(clienteExistente));
+            Assert.AreEqual("Este nome de usuário já está em uso.", ex.Message);
+        }
+
+        [Test]
+        public void UpdateCliente_ShouldThrowArgumentException_WhenUsuarioNaoInformado()
+        {
+            var cliente = new Cliente { Nome = "Nome alterado" };
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.UpdateCliente(cliente));
+            Assert.AreEqual("Usuário é obrigatório.", ex.Message);
+        }
+
+        [Test]
+        public void UpdateCliente_ShouldThrowArgumentException_WhenUsuarioDoesntExists()
+        {
+            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Nome alterado" };
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(cliente.Usuario)).ReturnsAsync((Cliente)null);
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.UpdateCliente(cliente));
+            Assert.AreEqual("Cliente não encontrado.", ex.Message);
+        }
         #endregion
     }
 }
