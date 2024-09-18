@@ -15,7 +15,7 @@ namespace EventManagerBackend.Services
         {
             return await _clienteRepository.GetAllClientes();
         }
-        public async Task<Cliente> GetClienteById(string usuario) 
+        public async Task<Cliente> GetClienteByUsuario(string usuario) 
         {
             return await _clienteRepository.GetClienteByUsuario(usuario);
         }

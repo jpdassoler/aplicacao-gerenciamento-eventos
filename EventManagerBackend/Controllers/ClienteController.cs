@@ -26,7 +26,7 @@ namespace EventManagerBackend.Controllers
         [HttpGet("{usuario}")]
         public async Task<IActionResult> GetClienteByUsuario(string usuario) 
         {
-            var cliente = await _clienteService.GetClienteById(usuario);
+            var cliente = await _clienteService.GetClienteByUsuario(usuario);
             if (cliente == null)
             {
                 return NotFound();
