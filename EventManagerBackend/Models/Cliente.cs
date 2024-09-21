@@ -6,6 +6,7 @@ namespace EventManagerBackend.Models
     [Table("Cliente")]
     public class Cliente
     {
+        [Key]
         [Required]
         [StringLength(15, ErrorMessage = "O nome de usuário não pode ter mais de 15 caracteres.")]
         public string Usuario { get; set; }

@@ -75,12 +75,13 @@ namespace EventManagerBackend.Test
         [Test]
         public async Task DeleteCliente_ShouldDeleteCliente_WhenUsuarioExists_TesteSucesso()
         {
-            var usuario = "usuarioTeste";
-            _mockClienteRepository.Setup(repo => repo.DeleteCliente(usuario)).Returns(Task.CompletedTask);
+            var cliente = new Cliente { Usuario = "usuarioTeste" } ;
 
-            await _clienteService.DeleteCliente(usuario);
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(cliente.Usuario)).ReturnsAsync(cliente);
 
-            _mockClienteRepository.Verify(repo => repo.DeleteCliente(usuario), Times.Once);
+            await _clienteService.DeleteCliente(cliente.Usuario);
+
+            _mockClienteRepository.Verify(repo => repo.DeleteCliente(cliente.Usuario), Times.Once);
         }
         #endregion
 
@@ -129,13 +130,45 @@ namespace EventManagerBackend.Test
         }
 
         [Test]
-        public void UpdateCliente_ShouldThrowArgumentException_WhenUsuarioDoesntExists()
+        public void UpdateCliente_ShouldThrowArgumentException_WhenUsuarioDoesNotExists()
         {
             var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Nome alterado" };
             _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(cliente.Usuario)).ReturnsAsync((Cliente)null);
 
             var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.UpdateCliente(cliente));
             Assert.AreEqual("Cliente não encontrado.", ex.Message);
+        }
+
+        [Test]
+        public void DeleteCliente_ShouldThrowArgumentException_WhenUsuarioDoesNotExist()
+        {
+            var usuario = "usuarioInexistente";
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(usuario)).ReturnsAsync((Cliente)null);
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.DeleteCliente(usuario));
+            Assert.AreEqual("Cliente não encontrado.", ex.Message);
+        }
+
+
+        [Test]
+        public async Task GetAllClientes_ShouldReturnNull_WhenClienteDoesNotExist()
+        {
+            _mockClienteRepository.Setup(repo => repo.GetAllClientes()).ReturnsAsync(Enumerable.Empty<Cliente>().AsQueryable());
+            var result = await _clienteService.GetAllClientes();
+
+            Assert.IsNotNull(result);
+            Assert.IsEmpty(result);
+        }
+
+        [Test]
+        public async Task GetClienteByUsuario_ShouldReturnNull_WhenUsuarioDoesNotExist()
+        {
+            var usuario = "usuarioInexistente";
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(usuario)).ReturnsAsync((Cliente)null);
+
+            var result = await _clienteService.GetClienteByUsuario(usuario);
+
+            Assert.IsNull(result);
         }
         #endregion
     }

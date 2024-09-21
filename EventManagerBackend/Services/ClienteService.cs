@@ -69,6 +69,11 @@ namespace EventManagerBackend.Services
         }
         public async Task DeleteCliente(string usuario)
         {
+            var cliente = await _clienteRepository.GetClienteByUsuario(usuario);
+            if (cliente == null)
+            {
+                throw new ArgumentException("Cliente não encontrado.");
+            }
             await _clienteRepository.DeleteCliente(usuario);
         }
 
