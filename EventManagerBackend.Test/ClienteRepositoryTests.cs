@@ -50,6 +50,64 @@ namespace EventManagerBackend.Test
             Assert.AreEqual(cliente.Senha, result.Senha);
         }
 
+        [Test]
+        public async Task GetClienteByUsuario_ShouldReturnCliente_TesteSucesso()
+        {
+            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Fulano de Tal", Senha = "xpto" };
+            await _clienteRepository.AddCliente(cliente);
+
+            var result = await _clienteRepository.GetClienteByUsuario(cliente.Usuario);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(cliente.Usuario, result.Usuario);
+            Assert.AreEqual(cliente.Nome, result.Nome);
+        }
+
+        [Test]
+        public async Task GetAllClientes_ShouldReturnAllClientes_TesteSucesso()
+        {
+            var cliente1 = new Cliente { Usuario = "usuarioTeste1", Nome = "Fulano 1", Senha = "xpto" };
+            var cliente2 = new Cliente { Usuario = "usuarioTeste2", Nome = "Fulano 2", Senha = "xpto" };
+            await _clienteRepository.AddCliente(cliente1);
+            await _clienteRepository.AddCliente(cliente2);
+
+            var result = await _clienteRepository.GetAllClientes();
+
+            Assert.AreEqual(2, result.Count());
+            Assert.IsTrue(result.Any(c => c.Usuario == cliente1.Usuario));
+            Assert.IsTrue(result.Any(c => c.Usuario == cliente2.Usuario));
+            Assert.IsTrue(result.Any(c => c.Nome == cliente1.Nome));
+            Assert.IsTrue(result.Any(c => c.Nome == cliente2.Nome));
+        }
+
+        [Test]
+        public async Task UpdateCliente_ShouldUpdateCliente_TesteSucesso()
+        {
+            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Fulano de Tal", Senha = "xpto" };
+            await _clienteRepository.AddCliente(cliente);
+
+            cliente.Nome = "Fulano atualizado";
+            await _clienteRepository.UpdateCliente(cliente);
+
+            var updatedCliente = await _clienteRepository.GetClienteByUsuario(cliente.Usuario);
+
+            Assert.IsNotNull(updatedCliente);
+            Assert.AreEqual("Fulano atualizado", updatedCliente.Nome);
+        }
+
+        [Test]
+        public async Task DeleteCliente_ShouldRemoveCliente_TesteSucesso()
+        {
+            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Fulano de Tal", Senha = "xpto" };
+            await _clienteRepository.AddCliente(cliente);
+
+            await _clienteRepository.DeleteCliente(cliente.Usuario);
+
+            var deletedCliente = await _clienteRepository.GetClienteByUsuario(cliente.Usuario);
+
+            Assert.IsNull(deletedCliente);
+        }
+
         [TearDown]
         public void TearDown()
         {
