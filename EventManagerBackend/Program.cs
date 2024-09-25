@@ -18,6 +18,12 @@ if (builder.Environment.IsDevelopment())
     Env.Load(envFilePath);
 }
 
+//Teste com banco de dados de produção, comentar trecho acima e descomentar abaixo
+/*
+var envFilePath = Path.Combine(projectDirectory, "Environments", ".env.production");
+Env.Load(envFilePath);
+*/
+
 // Configurar o Entity Framework Core com MySQL
 var connectionString = $"Server={Env.GetString("MYSQL_DB_HOST")};" +
                        $"Database={Env.GetString("MYSQL_DB_NAME")};" +
