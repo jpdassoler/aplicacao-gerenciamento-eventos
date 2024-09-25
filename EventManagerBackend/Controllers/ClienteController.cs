@@ -1,5 +1,6 @@
 ﻿using EventManagerBackend.Models;
 using EventManagerBackend.Services;
+using EventManagerBackend.DTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,19 +67,15 @@ namespace EventManagerBackend.Controllers
         }
 
         [HttpPut("{usuario}")]
-        public async Task<IActionResult> UpdateCliente(string usuario, [FromBody] Cliente cliente)
+        public async Task<IActionResult> UpdateCliente(string usuario, [FromBody] UpdateClienteDTO clienteDTO)
         {
-            if (usuario != cliente.Usuario)
-            {
-                return BadRequest("O nome de usuário não pode ser alterado.");
-            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
-                await _clienteService.UpdateCliente(cliente);
+                await _clienteService.UpdateCliente(usuario, clienteDTO);
                 return NoContent();
             }
             catch (ArgumentException e)
@@ -99,8 +96,23 @@ namespace EventManagerBackend.Controllers
         [HttpDelete("{usuario}")]
         public async Task<IActionResult> DeleteCliente(string usuario)
         {
-            await _clienteService.DeleteCliente(usuario);
-            return NoContent();
+            try
+            {
+                await _clienteService.DeleteCliente(usuario);
+                return NoContent();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Ocorreu um erro interno no servidor.");
+            }
         }
     }
 }

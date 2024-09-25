@@ -1,4 +1,5 @@
 ﻿using EventManagerBackend.Controllers;
+using EventManagerBackend.DTOs;
 using EventManagerBackend.Models;
 using EventManagerBackend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -69,10 +70,11 @@ namespace EventManagerBackend.Test
         [Test]
         public async Task UpdateCliente_ShouldReturnNoContent_WhenClienteIsValid_TesteSucesso()
         {
-            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Fulano de tal" };
-            _mockClienteService.Setup(s => s.UpdateCliente(cliente)).Returns(Task.CompletedTask);
+            var usuario = "usuarioTeste";
+            var cliente = new UpdateClienteDTO { Nome = "Fulano de tal" };
+            _mockClienteService.Setup(s => s.UpdateCliente(usuario, cliente)).Returns(Task.CompletedTask);
 
-            var result = await _clienteController.UpdateCliente(cliente.Usuario, cliente);
+            var result = await _clienteController.UpdateCliente(usuario, cliente);
 
             Assert.IsInstanceOf<NoContentResult>(result);
         }
@@ -119,21 +121,13 @@ namespace EventManagerBackend.Test
         }
 
         [Test]
-        public async Task UpdateCliente_ShouldReturnBadRequest_WhenUsuarioDoesNotMatch_TesteFalha()
-        {
-            var cliente = new Cliente { Usuario = "usuarioTeste1", Nome = "Fulano de Tal" };
-
-            var result = await _clienteController.UpdateCliente("usuarioTeste2", cliente);
-
-            Assert.IsInstanceOf<BadRequestObjectResult>(result);
-        }
-
-        [Test]
         public async Task UpdateCliente_ShouldReturnBadRequest_WhenEmailInvalido_TesteFalha()
         {
-            var cliente = new Cliente { Usuario = "usuarioTeste", Email = "email" };
             _clienteController.ModelState.AddModelError("Email", "O formato de e-mail é inválido.");
-            var result = await _clienteController.UpdateCliente(cliente.Usuario, cliente);
+            var usuario = "usuarioTeste";
+            var cliente = new UpdateClienteDTO { Email = "Fulano de Tal" };
+
+            var result = await _clienteController.UpdateCliente(usuario, cliente);
 
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
         }

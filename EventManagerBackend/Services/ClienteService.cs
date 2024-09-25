@@ -1,4 +1,5 @@
-﻿using EventManagerBackend.Models;
+﻿using EventManagerBackend.DTOs;
+using EventManagerBackend.Models;
 using EventManagerBackend.Repositories;
 
 namespace EventManagerBackend.Services
@@ -42,29 +43,40 @@ namespace EventManagerBackend.Services
             }
             await _clienteRepository.AddCliente(cliente);
         }
-        public async Task UpdateCliente(Cliente cliente)
+        public async Task UpdateCliente(string usuario, UpdateClienteDTO dto)
         {
             //Validação campos obrigatórios
-            if (String.IsNullOrEmpty(cliente.Usuario))
+            if (String.IsNullOrEmpty(usuario))
             {
                 throw new ArgumentException("Usuário é obrigatório.");
             }
             //Verifica se o usuário existe na base
-            var existingCliente = await _clienteRepository.GetClienteByUsuario(cliente.Usuario);
+            var existingCliente = await _clienteRepository.GetClienteByUsuario(usuario);
             if (existingCliente == null)
             {
                 throw new ArgumentException("Cliente não encontrado.");
             }
-            //Verifica se há tentativa de alterar o campo Usuário
-            if (existingCliente.Usuario != cliente.Usuario)
+
+            if (!string.IsNullOrWhiteSpace(dto.Senha))
             {
-                throw new ArgumentException("O nome de usuário não pode ser alterado.");
+                existingCliente.Senha = dto.Senha;
             }
-            existingCliente.Senha = cliente.Senha;
-            existingCliente.Telefone = cliente.Telefone;
-            existingCliente.Nome = cliente.Nome;
-            existingCliente.Instagram = cliente.Instagram;
-            existingCliente.Email = cliente.Email;
+            if (!string.IsNullOrWhiteSpace(dto.Telefone))
+            {
+                existingCliente.Telefone = dto.Telefone;
+            }
+            if (!string.IsNullOrWhiteSpace(dto.Nome))
+            {
+                existingCliente.Nome = dto.Nome;
+            }
+            if (!string.IsNullOrWhiteSpace(dto.Instagram))
+            {
+                existingCliente.Instagram = dto.Instagram;
+            }
+            if (!string.IsNullOrWhiteSpace(dto.Email))
+            {
+                existingCliente.Email = dto.Email;
+            }           
             await _clienteRepository.UpdateCliente(existingCliente);
         }
         public async Task DeleteCliente(string usuario)

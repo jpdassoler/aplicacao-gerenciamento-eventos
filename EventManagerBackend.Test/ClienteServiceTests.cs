@@ -1,3 +1,4 @@
+using EventManagerBackend.DTOs;
 using EventManagerBackend.Models;
 using EventManagerBackend.Repositories;
 using EventManagerBackend.Services;
@@ -61,10 +62,11 @@ namespace EventManagerBackend.Test
         public async Task UpdateCliente_ShouldUpdateCliente_WhenUsuarioExists_TesteSucesso() 
         {
             var clienteExistente = new Cliente { Usuario = "usuarioTeste", Nome = "Nome original"};
-            var clienteAtualizado = new Cliente { Usuario = "usuarioTeste", Nome = "Nome atualizado" };
+            var usuario = "usuarioTeste";
+            var clienteAtualizado = new UpdateClienteDTO { Nome = "Nome atualizado" };
             _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(clienteExistente.Usuario)).ReturnsAsync(clienteExistente);
 
-            await _clienteService.UpdateCliente(clienteAtualizado);
+            await _clienteService.UpdateCliente(usuario, clienteAtualizado);
 
             _mockClienteRepository.Verify(repo => repo.UpdateCliente(It.Is<Cliente>(
                 c => c.Usuario == "usuarioTeste" &&
@@ -123,19 +125,20 @@ namespace EventManagerBackend.Test
         [Test]
         public void UpdateCliente_ShouldThrowArgumentException_WhenUsuarioNaoInformado()
         {
-            var cliente = new Cliente { Nome = "Nome alterado" };
+            var cliente = new UpdateClienteDTO { Nome = "Nome alterado" };
 
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.UpdateCliente(cliente));
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.UpdateCliente(null, cliente));
             Assert.AreEqual("Usuário é obrigatório.", ex.Message);
         }
 
         [Test]
         public void UpdateCliente_ShouldThrowArgumentException_WhenUsuarioDoesNotExists()
         {
-            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Nome alterado" };
-            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(cliente.Usuario)).ReturnsAsync((Cliente)null);
+            var usuario = "usuarioTeste";
+            var cliente = new UpdateClienteDTO { Nome = "Nome alterado" };
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(usuario)).ReturnsAsync((Cliente)null);
 
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.UpdateCliente(cliente));
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteService.UpdateCliente(usuario, cliente));
             Assert.AreEqual("Cliente não encontrado.", ex.Message);
         }
 

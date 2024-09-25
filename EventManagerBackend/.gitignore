@@ -1,3 +1,5 @@
+.env.production
+.env.development
 .env
 # ignore bin and obj folders
 bin/
