@@ -31,14 +31,11 @@ var connectionString = $"Server={Env.GetString("MYSQL_DB_HOST")};" +
                        $"Password={Env.GetString("MYSQL_DB_PASSWORD")};";
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-Console.WriteLine($"Server={Env.GetString("MYSQL_DB_HOST")}");
-Console.WriteLine($"Database={Env.GetString("MYSQL_DB_NAME")}");
-Console.WriteLine($"User={Env.GetString("MYSQL_DB_USER")}");
-Console.WriteLine($"Password={Env.GetString("MYSQL_DB_PASSWORD")}");
-
 // Add services to the container.
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IEnderecoService, EnderecoService>();
+builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -74,11 +74,7 @@ namespace EventManagerBackend.Services
             if (!string.IsNullOrWhiteSpace(dto.Complemento))
             {
                 existingEndereco.Complemento = dto.Complemento;
-            }
-            if (!string.IsNullOrWhiteSpace(dto.Complemento))
-            {
-                existingEndereco.Complemento = dto.Complemento;
-            }
+            }          
             if (!string.IsNullOrWhiteSpace(dto.Bairro))
             {
                 existingEndereco.Bairro = dto.Bairro;
@@ -95,8 +91,8 @@ namespace EventManagerBackend.Services
         }
         public async Task DeleteEndereco(int id)
         {
-            var endereco = _enderecoRepository.GetEnderecoById(id);
-            if (endereco == null) 
+            var existingEndereco = await _enderecoRepository.GetEnderecoById(id);
+            if (existingEndereco == null)
             {
                 throw new ArgumentException("Endereço não encontrado.");
             }

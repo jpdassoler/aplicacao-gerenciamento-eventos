@@ -63,7 +63,7 @@ namespace EventManagerBackend.Test
         {
             var clienteExistente = new Cliente { Usuario = "usuarioTeste", Nome = "Nome original"};
             var usuario = "usuarioTeste";
-            var clienteAtualizado = new UpdateClienteDTO { Nome = "Nome atualizado" };
+            var clienteAtualizado = new UpdateClienteDTO { Nome = "Nome atualizado", Email = "fulano@email.com", Instagram = "@Fulano", Senha = "xpto", Telefone = "51123456789" };
             _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(clienteExistente.Usuario)).ReturnsAsync(clienteExistente);
 
             await _clienteService.UpdateCliente(usuario, clienteAtualizado);
