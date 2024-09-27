@@ -59,9 +59,9 @@ namespace EventManagerBackend.Services
             {
                 throw new ArgumentException("Endereço não encontrado.");
             }
-            if (dto.CEP > 0) 
+            if (dto.CEP.HasValue && dto.CEP > 0) 
             {
-                existingEndereco.CEP = dto.CEP;
+                existingEndereco.CEP = dto.CEP.Value;
             }
             if (!string.IsNullOrWhiteSpace(dto.Rua))
             {

@@ -11,5 +11,8 @@ namespace EventManagerBackend.Models
 
         //DBSet para a entidade Endereco
         public DbSet<Endereco> Enderecos { get; set; }
+
+        //DBSet para a entidade Evento
+        public DbSet<Evento> Eventos { get; set; }
     }
 }

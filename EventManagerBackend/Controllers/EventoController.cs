@@ -7,37 +7,36 @@ namespace EventManagerBackend.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class EnderecoController : ControllerBase
+    public class EventoController : ControllerBase
     {
-        private readonly IEnderecoService _enderecoService;
-
-        public EnderecoController(IEnderecoService enderecoService)
+        private readonly IEventoService _eventoService;
+        public EventoController(IEventoService eventoService)
         {
-            _enderecoService = enderecoService;
+            _eventoService = eventoService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllEnderecos()
+        public async Task<IActionResult> GetAllEventos()
         {
-            var enderecos = await _enderecoService.GetAllEnderecos();
-            return Ok(enderecos);
+            var eventos = await _eventoService.GetAllEventos();
+            return Ok(eventos);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEnderecoById(int id)
+        public async Task<IActionResult> GetEventoById(int id)
         {
-            var endereco = await _enderecoService.GetEnderecoById(id);
-            if (endereco == null)
+            var evento = await _eventoService.GetEventoById(id);
+            if (evento == null)
             {
                 return NotFound();
             }
-            return Ok(endereco);
+            return Ok(evento);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddEndereco([FromBody] Endereco endereco)
+        public async Task<IActionResult> AddEvento([FromBody] Evento evento)
         {
-            if (endereco == null)
+            if (evento == null)
             {
                 return BadRequest();
             }
@@ -47,8 +46,8 @@ namespace EventManagerBackend.Controllers
             }
             try
             {
-                await _enderecoService.AddEndereco(endereco);
-                return CreatedAtAction(nameof(GetEnderecoById), new { id = endereco.ID_Endereco }, endereco);
+                await _eventoService.AddEvento(evento);
+                return CreatedAtAction(nameof(GetEventoById), new { id = evento.ID_Evento }, evento);
             }
             catch (ArgumentException ex)
             {
@@ -65,7 +64,7 @@ namespace EventManagerBackend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEndereco(int id, [FromBody] UpdateEnderecoDTO enderecoDTO)
+        public async Task<IActionResult> UpdateEvento(int id, [FromBody] UpdateEventoDTO eventoDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +72,7 @@ namespace EventManagerBackend.Controllers
             }
             try
             {
-                await _enderecoService.UpdateEndereco(id, enderecoDTO);
+                await _eventoService.UpdateEvento(id, eventoDTO);
                 return NoContent();
             }
             catch (ArgumentException e)
@@ -91,11 +90,11 @@ namespace EventManagerBackend.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEndereco(int id)
+        public async Task<IActionResult> DeleteEvento(int id)
         {
             try
             {
-                await _enderecoService.DeleteEndereco(id);
+                await _eventoService.DeleteEvento(id);
                 return NoContent();
             }
             catch (ArgumentException e)
