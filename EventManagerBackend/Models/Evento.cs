@@ -27,10 +27,10 @@ namespace EventManagerBackend.Models
         public string? Descricao { get; set; }
 
         [Range(0, (double)decimal.MaxValue, ErrorMessage = "O preço do ingresso deve ser positivo.")]
-        public decimal? PrecoIngresso { get; set; }
+        public decimal? Preco_Ingresso { get; set; }
 
         [StringLength(200, ErrorMessage = "A URL do ingresso não pode ter mais de 200 caracteres.")]
-        public string? URLIngresso { get; set; }
+        public string? URL_Ingresso { get; set; }
 
         public virtual Endereco Endereco { get; set; }
     }

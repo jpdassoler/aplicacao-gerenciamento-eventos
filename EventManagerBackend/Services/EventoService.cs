@@ -22,7 +22,7 @@ namespace EventManagerBackend.Services
         public async Task AddEvento(Evento evento)
         {
             //Validação campos obrigatórios
-            if (evento.ID_Evento <= 0)
+            if (evento.ID_Endereco <= 0)
             {
                 throw new ArgumentException("O evento precisa ter um endereço cadastrado.");
             }
@@ -77,17 +77,17 @@ namespace EventManagerBackend.Services
             {
                 existingEvento.Descricao = dto.Descricao;
             }
-            if (dto.PrecoIngresso.HasValue)
+            if (dto.Preco_Ingresso.HasValue)
             {
-                if (dto.PrecoIngresso.Value < 0)
+                if (dto.Preco_Ingresso.Value < 0)
                 {
                     throw new ArgumentException("O preço do ingresso deve ser positivo.");
                 }
-                existingEvento.PrecoIngresso = dto.PrecoIngresso.Value;
+                existingEvento.Preco_Ingresso = dto.Preco_Ingresso.Value;
             }
-            if (!string.IsNullOrWhiteSpace(dto.URLIngresso))
+            if (!string.IsNullOrWhiteSpace(dto.URL_Ingresso))
             {
-                existingEvento.URLIngresso = dto.URLIngresso;
+                existingEvento.URL_Ingresso = dto.URL_Ingresso;
             }
             await _eventoRepository.UpdateEvento(existingEvento);
         }
