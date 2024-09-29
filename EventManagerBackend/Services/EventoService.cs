@@ -22,10 +22,6 @@ namespace EventManagerBackend.Services
         public async Task AddEvento(Evento evento)
         {
             //Validação campos obrigatórios
-            if (evento.ID_Endereco <= 0)
-            {
-                throw new ArgumentException("O evento precisa ter um endereço cadastrado.");
-            }
             if (String.IsNullOrWhiteSpace(evento.Nome))
             {
                 throw new ArgumentException("O nome do evento é obrigatório.");
@@ -47,7 +43,7 @@ namespace EventManagerBackend.Services
             {
                 throw new ArgumentException("ID do evento é obrigatório.");
             }
-            //Verifica se o endereço existe na base
+            //Verifica se o evento existe na base
             var existingEvento = await _eventoRepository.GetEventoById(id);
             if (existingEvento == null) 
             {

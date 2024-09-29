@@ -97,14 +97,6 @@ namespace EventManagerBackend.Test
 
         #region Testes de falha
         [Test]
-        public void AddEvento_ShouldThrowArgumentException_WhenIdEnderecoNaoInformado()
-        {
-            var evento = new Evento { Nome = "Evento 1", Data = DateTime.Now.AddDays(2) };
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => _eventoService.AddEvento(evento));
-            Assert.AreEqual("O evento precisa ter um endereço cadastrado.", ex.Message);
-        }
-
-        [Test]
         public void AddEvento_ShouldThrowArgumentException_WhenNomeNaoInformado()
         {
             var evento = new Evento { ID_Endereco = 1, Data = DateTime.Now.AddDays(2) };
