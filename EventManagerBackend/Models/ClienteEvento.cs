@@ -1,24 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EventManagerBackend.Models
 {
-    [Table("ClienteEvento")]
+    [PrimaryKey(nameof(Usuario), nameof(ID_Evento))]
+    [Table("Cliente_Evento")]
     public class ClienteEvento
     {
-        [Key, Column(Order = 0)]
         public string Usuario { get; set; }
-
-        [Key, Column(Order = 1)]
         public int ID_Evento { get; set; }
-
         [Required]
         public EnumIndComparecimento Ind_Comparecimento { get; set; }
-
-        [ForeignKey("Usuario")]
-        public Cliente Cliente { get; set; }
-
-        [ForeignKey("ID_Evento")]
-        public Evento Evento { get; set; }
     }
 }

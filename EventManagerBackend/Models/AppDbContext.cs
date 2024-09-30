@@ -17,5 +17,17 @@ namespace EventManagerBackend.Models
 
         //DBSet para a entidade ClienteEvento
         public DbSet<ClienteEvento> ClienteEventos { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Configuração da conversão de enum para char
+            modelBuilder.Entity<ClienteEvento>()
+                .Property(e => e.Ind_Comparecimento)
+                .HasConversion(
+                    v => v.ToString()[0],  // Enum to char
+                    v => (EnumIndComparecimento)v);  // char to Enum
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
