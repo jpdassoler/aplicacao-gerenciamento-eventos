@@ -7,9 +7,13 @@ namespace EventManagerBackend.Services
     public class ClienteEventoService : IClienteEventoService
     {
         private readonly IClienteEventoRepository _clienteEventoRepository;
-        public ClienteEventoService(IClienteEventoRepository clienteEventoRepository)
+        private readonly IClienteRepository _clienteRepository;
+        private readonly IEventoRepository _eventoRepository;
+        public ClienteEventoService(IClienteEventoRepository clienteEventoRepository, IClienteRepository clienteRepository, IEventoRepository eventoRepository)
         {
             _clienteEventoRepository = clienteEventoRepository;
+            _clienteRepository = clienteRepository;
+            _eventoRepository = eventoRepository;
         }
         public async Task<IEnumerable<ClienteEvento>> GetAllClienteEventos()
         {
@@ -33,6 +37,18 @@ namespace EventManagerBackend.Services
             if (!Enum.IsDefined(typeof(EnumIndComparecimento), clienteEvento.Ind_Comparecimento))
             {
                 throw new ArgumentException("O comparecimento deve ser Sim, Não, Talvez ou Organizador.");
+            }
+            //Validação de Evento existente
+            var existingEvento = await _eventoRepository.GetEventoById(clienteEvento.ID_Evento);
+            if (existingEvento == null)
+            {
+                throw new ArgumentException("Evento associado não encontrado.");
+            }
+            //Validação de Cliente existente
+            var existingCliente = await _clienteRepository.GetClienteByUsuario(clienteEvento.Usuario);
+            if (existingCliente == null)
+            {
+                throw new ArgumentException("Cliente associado não encontrado.");
             }
             await _clienteEventoRepository.AddClienteEvento(clienteEvento);
         }

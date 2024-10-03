@@ -3,6 +3,7 @@ using EventManagerBackend.Models;
 using DotNetEnv;
 using EventManagerBackend.Services;
 using EventManagerBackend.Repositories;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +42,11 @@ builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IClienteEventoService, ClienteEventoService>();
 builder.Services.AddScoped<IClienteEventoRepository, ClienteEventoRepository>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

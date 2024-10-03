@@ -16,13 +16,17 @@ namespace EventManagerBackend.Test
     public class ClienteEventoServiceTests
     {
         private Mock<IClienteEventoRepository> _mockClienteEventoRepository;
+        private Mock<IClienteRepository> _mockClienteRepository;
+        private Mock<IEventoRepository> _mockEventoRepository;
         private ClienteEventoService _clienteEventoService;
 
         [SetUp]
         public void Setup()
         {
             _mockClienteEventoRepository = new Mock<IClienteEventoRepository>();
-            _clienteEventoService = new ClienteEventoService(_mockClienteEventoRepository.Object);
+            _mockClienteRepository = new Mock<IClienteRepository>();
+            _mockEventoRepository = new Mock<IEventoRepository>();
+            _clienteEventoService = new ClienteEventoService(_mockClienteEventoRepository.Object, _mockClienteRepository.Object, _mockEventoRepository.Object);
         }
 
         #region Testes de Sucesso
@@ -61,6 +65,11 @@ namespace EventManagerBackend.Test
         public async Task AddClienteEvento_ShouldAddClienteEvento_WhenClienteEventoIsValid_TesteSucesso()
         {
             var clienteEvento = new ClienteEvento { Usuario = "usuarioTeste", ID_Evento = 1, Ind_Comparecimento = EnumIndComparecimento.Sim };
+            var cliente = new Cliente { Usuario = "usuarioTeste", Nome = "Fulano de Tal", Senha = "xpto" };
+            var evento = new Evento { ID_Evento = 1, Nome = "Evento Teste", Data = DateTime.Now.AddDays(1), ID_Endereco = 1 };
+
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(clienteEvento.Usuario)).ReturnsAsync(cliente);
+            _mockEventoRepository.Setup(repo => repo.GetEventoById(clienteEvento.ID_Evento)).ReturnsAsync(evento);
 
             await _clienteEventoService.AddClienteEvento(clienteEvento);
 
@@ -118,6 +127,30 @@ namespace EventManagerBackend.Test
             var clienteEvento = new ClienteEvento { Usuario = "usuarioTeste", ID_Evento = 1, };
             var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteEventoService.AddClienteEvento(clienteEvento));
             Assert.AreEqual("O comparecimento deve ser Sim, Não, Talvez ou Organizador.", ex.Message);
+        }
+
+        [Test]
+        public void AddClienteEvento_ShouldThrowArgumentException_WhenClienteDoesNotExist()
+        {
+            var clienteEvento = new ClienteEvento { Usuario = "usuarioInvalido", ID_Evento = 1, Ind_Comparecimento = EnumIndComparecimento.Sim };
+            var evento = new Evento { ID_Endereco = 1, Nome = "Evento teste", Data = DateTime.Now.AddDays(1) };
+
+            _mockEventoRepository.Setup(repo => repo.GetEventoById(clienteEvento.ID_Evento)).ReturnsAsync(evento);
+            _mockClienteRepository.Setup(repo => repo.GetClienteByUsuario(clienteEvento.Usuario)).ReturnsAsync((Cliente)null);
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteEventoService.AddClienteEvento(clienteEvento));
+            Assert.AreEqual("Cliente associado não encontrado.", ex.Message);
+        }
+
+        [Test]
+        public void AddClienteEvento_ShouldThrowArgumentException_WhenEventoDoesNotExist()
+        {
+            var clienteEvento = new ClienteEvento { Usuario = "usuarioTeste", ID_Evento = 99, Ind_Comparecimento = EnumIndComparecimento.Sim };
+
+            _mockEventoRepository.Setup(repo => repo.GetEventoById(clienteEvento.ID_Evento)).ReturnsAsync((Evento)null);
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteEventoService.AddClienteEvento(clienteEvento));
+            Assert.AreEqual("Evento associado não encontrado.", ex.Message);
         }
 
         [Test]
