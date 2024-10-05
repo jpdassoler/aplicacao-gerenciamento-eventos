@@ -41,6 +41,17 @@ builder.Services.AddScoped<IEventoService, EventoService>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IClienteEventoService, ClienteEventoService>();
 builder.Services.AddScoped<IClienteEventoRepository, ClienteEventoRepository>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            var frontEndUrl = Env.GetString("FRONTEND_URL");
+            builder.WithOrigins(frontEndUrl)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+        });
+});
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -60,6 +71,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowSpecificOrigins");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
