@@ -19,8 +19,16 @@ const ClienteCadastro = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const clienteData = {
+            ...cliente,
+            email: cliente.email === "" ? null : cliente.email,
+            telefone: cliente.telefone === "" ? null : cliente.telefone,
+            instagram: cliente.instagram === "" ? null : cliente.instagram
+        };
+
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/Cliente`, cliente);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/Cliente`, clienteData);
             alert("Cliente cadastrado com sucesso!");
         } catch(error) {
             console.error('Erro ao cadastrar cliente:', error.response || error.message || error);
