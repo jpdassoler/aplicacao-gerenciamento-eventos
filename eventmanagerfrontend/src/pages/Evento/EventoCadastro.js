@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './EventoCadastro.css';
 
 const EventoCadastro = () => {
@@ -20,6 +21,8 @@ const EventoCadastro = () => {
             uf: ''
         }
     });
+
+    const navigate = useNavigate();
 
     //Buscar o endereço via API Correios ao digitar o CEP
     const buscarEnderecoPorCEP = async (cep) => {
@@ -102,7 +105,8 @@ const EventoCadastro = () => {
 
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/Evento`, eventoData);
-            alert("Evento cadastrado com sucesso!")
+            alert("Evento cadastrado com sucesso!");
+            navigate("/home");
         } catch(error) {
             console.error('Erro ao cadastrar evento:', error.response || error.message || error);
             alert("Erro ao cadastrar evento.");

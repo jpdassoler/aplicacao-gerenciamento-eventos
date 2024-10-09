@@ -114,5 +114,32 @@ namespace EventManagerBackend.Controllers
                 return StatusCode(500, "Ocorreu um erro interno no servidor.");
             }
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        {
+            var cliente = await _clienteService.GetClienteByUsuario(loginDTO.Usuario);
+
+            if (cliente == null)
+            {
+                return NotFound(new { success = false, message = "Usuário ou senha incorretos." });
+            }
+
+            if (cliente.Senha != loginDTO.Senha)
+            {
+                return BadRequest(new { success = false, message = "Senha incorreta." });
+            }
+
+            var clienteRetorno = new Cliente
+            {
+                Usuario = cliente.Usuario,
+                Nome = cliente.Nome,
+                Email = cliente.Email,
+                Telefone = cliente.Telefone,
+                Instagram = cliente.Instagram
+            };
+
+            return Ok(new { success = true, cliente = clienteRetorno });
+        }
     }
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './ClienteCadastro.css';
 
 const ClienteCadastro = () => {
@@ -11,6 +12,8 @@ const ClienteCadastro = () => {
         telefone: '',
         instagram: ''
     });
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,6 +33,7 @@ const ClienteCadastro = () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/Cliente`, clienteData);
             alert("Cliente cadastrado com sucesso!");
+            navigate("/home");
         } catch(error) {
             console.error('Erro ao cadastrar cliente:', error.response || error.message || error);
             alert("Erro ao cadastrar cliente.");

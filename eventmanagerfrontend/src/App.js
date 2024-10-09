@@ -2,13 +2,28 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ClienteCadastro from './pages/Cliente/ClienteCadastro';
 import EventoCadastro from './pages/Evento/EventoCadastro';
+import Login from './pages/Login/Login';
+import ProtectedRoute from './routes/ProtectedRoute';
+import Home from './pages/Home/Home';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/login" element={<Login/>}/>
         <Route path="/cadastro-cliente" element={<ClienteCadastro/>}/>
-        <Route path="/cadastro-evento" element={<EventoCadastro/>}/>    
+        <Route path="/cadastro-evento" element={
+          <ProtectedRoute>
+            <EventoCadastro/>
+          </ProtectedRoute>          
+          }
+        /> 
+        <Route path="/home" element={
+          <ProtectedRoute>
+            <Home/>
+          </ProtectedRoute>
+          }
+        />   
       </Routes>
     </Router>
   );
