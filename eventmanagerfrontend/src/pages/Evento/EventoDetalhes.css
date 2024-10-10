@@ -1,0 +1,133 @@
+.evento-detalhes-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.evento-nome {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.evento-descricao {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #666;
+    text-align: center;
+}
+
+.evento-info {
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.evento-info-item {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.evento-preco {
+    font-size: 16px;
+    font-weight: bold;
+    color: #d9534f;
+    margin-bottom: 10px;
+}
+
+.evento-preco.gratuito {
+    color: #5cb85c;
+}
+
+.evento-comprar-ingresso {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+a.evento-comprar-link {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.evento-comprar-link:hover {
+    background-color: #0056b3;
+}
+
+.comparecimento-container {
+    margin-top: 20px;
+}
+
+.comparecimento-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.abas {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.aba {
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-weight: bold;
+}
+
+.aba:hover {
+    background-color: #f0f0f0;
+}
+
+.aba.ativa {
+    border-bottom: 3px solid #007bff;
+}
+
+.lista-usuarios {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.usuario {
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.usuario:last-child {
+    border-bottom: none;
+}
+
+.icones-comparecimento {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.icone {
+    cursor: pointer;
+    padding: 10px;
+    margin: 0 10px;
+    font-size: 24px;
+    color: #333;
+}
+
+.icone:hover {
+    color: #007bff;
+}

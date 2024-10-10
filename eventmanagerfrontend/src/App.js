@@ -5,6 +5,7 @@ import EventoCadastro from './pages/Evento/EventoCadastro';
 import Login from './pages/Login/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Home from './pages/Home/Home';
+import EventoDetalhes from './pages/Evento/EventoDetalhes';
 
 function App() {
   return (
@@ -24,6 +25,11 @@ function App() {
           </ProtectedRoute>
           }
         />   
+        <Route path="/evento/:id" element={
+          <ProtectedRoute>
+            <EventoDetalhes/>
+          </ProtectedRoute>
+        }/>
       </Routes>
     </Router>
   );

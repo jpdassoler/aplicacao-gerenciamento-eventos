@@ -33,7 +33,7 @@ const ClienteCadastro = () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/Cliente`, clienteData);
             alert("Cliente cadastrado com sucesso!");
-            navigate("/home");
+            navigate("/login");
         } catch(error) {
             console.error('Erro ao cadastrar cliente:', error.response || error.message || error);
             alert("Erro ao cadastrar cliente.");

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css';
 
 const Home = () => {
     const [eventos, setEventos] = useState([]);
+    const history = useHistory();
 
     useEffect(() => {
         const fetchEventos = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/Evento`);
-                console.log(response.data);
                 setEventos(response.data);
             } catch (error) {
                 console.error('Erro ao buscar eventos:', error.response || error.message || error);
@@ -19,8 +20,12 @@ const Home = () => {
         fetchEventos();
     }, []);
 
+    const handleCardClick = (id) => {
+        history.push(`/evento/${id}`);
+    };
+
     const handleCreateEvent = () => {
-        window.location.href = "/cadastro-evento";
+        history.push("/cadastro-evento");
     };
 
     return (
@@ -29,7 +34,7 @@ const Home = () => {
             <div className="feed">
                 {eventos.length > 0 ? (
                     eventos.map((evento) => (
-                        <div key={evento.iD_Evento} className="card">
+                        <div key={evento.iD_Evento} className="card" onClick={() => handleCardClick(evento.iD_Evento)}>
                             <h3>{evento.nome}</h3>
                             {evento.descricao && <p>{evento.descricao}</p>}                            
                             <div className="card-footer">
