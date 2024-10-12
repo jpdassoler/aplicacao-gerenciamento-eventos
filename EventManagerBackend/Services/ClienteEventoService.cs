@@ -50,7 +50,16 @@ namespace EventManagerBackend.Services
             {
                 throw new ArgumentException("Cliente associado não encontrado.");
             }
-            await _clienteEventoRepository.AddClienteEvento(clienteEvento);
+            //Se ClienteEvento existente, faz update, senão, faz inserção
+            var existingClienteEvento = await _clienteEventoRepository.GetClienteEventoById(clienteEvento.Usuario, clienteEvento.ID_Evento);
+            if (existingClienteEvento != null)
+            {
+                var updateClienteEvento = new UpdateClienteEventoDTO { Ind_Comparecimento = clienteEvento.Ind_Comparecimento };
+                await this.UpdateClienteEvento(clienteEvento.Usuario, clienteEvento.ID_Evento, updateClienteEvento);
+            } else
+            {
+                await _clienteEventoRepository.AddClienteEvento(clienteEvento);
+            }            
         }
         public async Task UpdateClienteEvento(string usuario, int idEvento, UpdateClienteEventoDTO dto)
         {
@@ -88,6 +97,25 @@ namespace EventManagerBackend.Services
                 throw new ArgumentException("Cliente_Evento não encontrado.");
             }
             await _clienteEventoRepository.DeleteClienteEvento(usuario, idEvento);
+        }
+        public async Task<IEnumerable<ClienteEventoDetalhesDTO>> GetClientesByEventoAndComparecimento(int idEvento, EnumIndComparecimento indComparecimento)
+        {
+            //Validação dos campos obrigatórios
+            if (idEvento <= 0)
+            {
+                throw new ArgumentException("ID do evento é obrigatório.");
+            }
+            if (!Enum.IsDefined(typeof(EnumIndComparecimento), indComparecimento))
+            {
+                throw new ArgumentException("O comparecimento deve ser Sim, Não, Talvez ou Organizador.");
+            }
+            //Validação de Evento existente
+            var existingEvento = await _eventoRepository.GetEventoById(idEvento);
+            if (existingEvento == null)
+            {
+                throw new ArgumentException("Evento associado não encontrado.");
+            }
+            return await _clienteEventoRepository.GetClientesByEventoAndComparecimento(idEvento, indComparecimento);
         }
     }
 }

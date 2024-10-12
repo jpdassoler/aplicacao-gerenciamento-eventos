@@ -1,4 +1,5 @@
-﻿using EventManagerBackend.Models;
+﻿using EventManagerBackend.DTOs;
+using EventManagerBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventManagerBackend.Repositories
@@ -36,6 +37,20 @@ namespace EventManagerBackend.Repositories
                 _context.ClienteEventos.Remove(clienteEvento);
                 await _context.SaveChangesAsync();
             }
+        }
+        public async Task<IEnumerable<ClienteEventoDetalhesDTO>> GetClientesByEventoAndComparecimento(int idEvento, EnumIndComparecimento indComparecimento)
+        {
+            var result = await (from ce in _context.ClienteEventos
+                                join c in _context.Clientes
+                                on ce.Usuario equals c.Usuario
+                                where ce.ID_Evento == idEvento && ce.Ind_Comparecimento == indComparecimento
+                                select new ClienteEventoDetalhesDTO
+                                {
+                                    Usuario = ce.Usuario,
+                                    Nome = c.Nome,
+                                    IndComparecimento = ce.Ind_Comparecimento
+                                }).ToListAsync();
+            return result;
         }
     }
 }

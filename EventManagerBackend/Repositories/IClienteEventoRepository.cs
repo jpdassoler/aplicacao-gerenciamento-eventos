@@ -1,4 +1,5 @@
-﻿using EventManagerBackend.Models;
+﻿using EventManagerBackend.DTOs;
+using EventManagerBackend.Models;
 
 namespace EventManagerBackend.Repositories
 {
@@ -9,5 +10,7 @@ namespace EventManagerBackend.Repositories
         Task AddClienteEvento(ClienteEvento clienteEvento);
         Task UpdateClienteEvento(ClienteEvento clienteEvento);
         Task DeleteClienteEvento(string usuario, int idEvento);
+        Task<IEnumerable<ClienteEventoDetalhesDTO>> GetClientesByEventoAndComparecimento(int idEvento, EnumIndComparecimento indComparecimento);
+
     }
 }

@@ -110,5 +110,28 @@ namespace EventManagerBackend.Controllers
                 return StatusCode(500, "Ocorreu um erro interno no servidor.");
             }
         }
+
+        [HttpGet("comparecimento/{idEvento}/{indComparecimento}")]
+        public async Task<IActionResult> GetClientesByEventoAndComparecimento(int idEvento, char indComparecimento)
+        {
+            try
+            {
+                var enumComparecimento = (EnumIndComparecimento)indComparecimento;
+                var clientes = await _clienteEventoService.GetClientesByEventoAndComparecimento(idEvento, enumComparecimento);
+                return Ok(clientes);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Ocorreu um erro interno no servidor.");
+            }
+        }
     }
 }

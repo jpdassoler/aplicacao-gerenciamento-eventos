@@ -10,5 +10,6 @@ namespace EventManagerBackend.Services
         Task AddClienteEvento(ClienteEvento clienteEvento);
         Task UpdateClienteEvento(string usuario, int idEvento, UpdateClienteEventoDTO clienteEvento);
         Task DeleteClienteEvento(string usuario, int idEvento);
+        Task<IEnumerable<ClienteEventoDetalhesDTO>> GetClientesByEventoAndComparecimento(int idEvento, EnumIndComparecimento indComparecimento);
     }
 }

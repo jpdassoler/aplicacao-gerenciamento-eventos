@@ -8,7 +8,7 @@ const EventoDetalhes = () => {
     const { id } = useParams();
     const [evento, setEvento] = useState(null);
     const [usuarios, setUsuarios] = useState([]);
-    const [abaAtiva, setAbaAtiva] = useState("Sim");
+    const [abaAtiva, setAbaAtiva] = useState("S");
 
     const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ const EventoDetalhes = () => {
     useEffect(() => {
         const fetchUsuariosComparecimento = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/ClienteEvento/${id}?Ind_Comparecimento=${abaAtiva}`)
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/ClienteEvento/comparecimento/${id}?Ind_Comparecimento=${abaAtiva}`)
             } catch (error) {
                 console.error('Erro ao buscar usuários:', error.response || error.message || error);
                 alert("Erro ao buscar usuários.");
@@ -82,9 +82,9 @@ const EventoDetalhes = () => {
                 <div className="comparecimento-header">Pessoas confirmadas no evento</div>
 
                 <div className="abas">
-                    <div className={`aba ${abaAtiva === 'Sim' ? 'ativa' : ''}`} onClick={() => setAbaAtiva("Sim")}>Sim</div>
-                    <div className={`aba ${abaAtiva === 'Nao' ? 'ativa' : ''}`} onClick={() => setAbaAtiva("Nao")}>Não</div>
-                    <div className={`aba ${abaAtiva === 'Talvez' ? 'ativa' : ''}`} onClick={() => setAbaAtiva("Talvez")}>Talvez</div>                  
+                    <div className={`aba ${abaAtiva === 'S' ? 'ativa' : ''}`} onClick={() => setAbaAtiva("S")}>Sim</div>
+                    <div className={`aba ${abaAtiva === 'N' ? 'ativa' : ''}`} onClick={() => setAbaAtiva("N")}>Não</div>
+                    <div className={`aba ${abaAtiva === 'T' ? 'ativa' : ''}`} onClick={() => setAbaAtiva("T")}>Talvez</div>                  
                 </div>
 
                 <div className="lista-usuarios">
@@ -95,7 +95,7 @@ const EventoDetalhes = () => {
 
                 <div className="icones-comparecimento">
                     <span className="icone" onClick={() => handleComparecimento("Sim")}>✔️</span>
-                    <span className="icone" onClick={() => handleComparecimento("Nao")}>❌</span>
+                    <span className="icone" onClick={() => handleComparecimento("Não")}>❌</span>
                     <span className="icone" onClick={() => handleComparecimento("Talvez")}>🤔</span>
                 </div>
             </div>
