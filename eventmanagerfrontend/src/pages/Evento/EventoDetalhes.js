@@ -26,16 +26,17 @@ const EventoDetalhes = () => {
         fetchEvento();
     }, [id]);
 
-    useEffect(() => {
-        const fetchUsuariosComparecimento = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/ClienteEvento/comparecimento/${id}?Ind_Comparecimento=${abaAtiva}`)
-            } catch (error) {
-                console.error('Erro ao buscar usuários:', error.response || error.message || error);
-                alert("Erro ao buscar usuários.");
-            }
-        };
+    const fetchUsuariosComparecimento = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/ClienteEvento/comparecimento/${id}/${abaAtiva}`);
+            setUsuarios(response.data);
+        } catch (error) {
+            console.error('Erro ao buscar usuários:', error.response || error.message || error);
+            alert("Erro ao buscar usuários.");
+        }
+    };
 
+    useEffect(() => {        
         fetchUsuariosComparecimento();
     }, [abaAtiva, id]);
 
@@ -50,16 +51,22 @@ const EventoDetalhes = () => {
 
             await axios.post(`${process.env.REACT_APP_API_URL}/ClienteEvento/`, { ID_Evento: id, Usuario: cliente.usuario, Ind_Comparecimento: status });
             alert("Comparecimento registrado.");
+            fetchUsuariosComparecimento();
         } catch (error) {
             console.error('Erro ao registrar comparecimento:', error.response || error.message || error);
             alert("Erro ao registrar comparecimento.");
         }
     };
 
+    const handleVoltarHome = () => {
+        navigate('/home');
+    };
+
     if(!evento) return <div>Carregando...</div>
 
     return (
         <div className="evento-detalhes-container">
+            <button className="voltar-home" onClick={handleVoltarHome}>Voltar para home</button>
             <h1 className="evento-nome">{evento.nome}</h1>
             <p className="evento-descricao">{evento.descricao || "Sem descrição disponível"}</p>
 
@@ -88,9 +95,13 @@ const EventoDetalhes = () => {
                 </div>
 
                 <div className="lista-usuarios">
-                    {usuarios.map(usuario => (
+                    {usuarios.length > 0 ? (
+                        usuarios.map(usuario => (
                         <div key={usuario.usuario} className="usuario">{usuario.nome}</div>
-                    ))}
+                    ))
+                ) : (
+                    <div>Sem participantes</div>
+                )}
                 </div>
 
                 <div className="icones-comparecimento">

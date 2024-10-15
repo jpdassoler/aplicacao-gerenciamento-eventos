@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ClienteCadastro from './pages/Cliente/ClienteCadastro';
 import EventoCadastro from './pages/Evento/EventoCadastro';
 import Login from './pages/Login/Login';
@@ -30,6 +30,7 @@ function App() {
             <EventoDetalhes/>
           </ProtectedRoute>
         }/>
+        <Route path="/" element={<Navigate to="/home" />} />
       </Routes>
     </Router>
   );

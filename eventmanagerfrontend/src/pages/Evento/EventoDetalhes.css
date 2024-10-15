@@ -131,3 +131,17 @@ a.evento-comprar-link:hover {
 .icone:hover {
     color: #007bff;
 }
+
+.voltar-home {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.voltar-home:hover {
+    background-color: #0056b3;
+}

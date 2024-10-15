@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
     const [eventos, setEventos] = useState([]);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchEventos = async () => {
@@ -21,11 +21,11 @@ const Home = () => {
     }, []);
 
     const handleCardClick = (id) => {
-        history.push(`/evento/${id}`);
+        navigate(`/evento/${id}`);
     };
 
     const handleCreateEvent = () => {
-        history.push("/cadastro-evento");
+        navigate("/cadastro-evento");
     };
 
     return (
