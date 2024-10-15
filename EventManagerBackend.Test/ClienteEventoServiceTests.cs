@@ -102,6 +102,27 @@ namespace EventManagerBackend.Test
 
             _mockClienteEventoRepository.Verify(repo => repo.DeleteClienteEvento(existingClienteEvento.Usuario, existingClienteEvento.ID_Evento), Times.Once);
         }
+
+        [Test]
+        public async Task GetClientesByEventoAndComparecimento_ShouldReturnClientes_WhenParametersValid_TesteSucesso()
+        {
+            int idEvento = 1;
+            EnumIndComparecimento indComparecimento = EnumIndComparecimento.Sim;
+
+            var clientesRetornados = new List<ClienteEventoDetalhesDTO>
+            {
+                new ClienteEventoDetalhesDTO { Usuario = "usuarioTeste", Nome = "Fulano de tal", IndComparecimento = indComparecimento }
+            };
+
+            _mockEventoRepository.Setup(repo => repo.GetEventoById(idEvento)).ReturnsAsync(new Evento());
+            _mockClienteEventoRepository.Setup(repo => repo.GetClientesByEventoAndComparecimento(idEvento, indComparecimento)).ReturnsAsync(clientesRetornados);
+
+            var result = await _clienteEventoService.GetClientesByEventoAndComparecimento(idEvento, indComparecimento);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual("Fulano de tal", result.First().Nome);
+        }
         #endregion
 
         #region Testes de Falha
@@ -206,6 +227,41 @@ namespace EventManagerBackend.Test
             var result = await _clienteEventoService.GetClienteEventoById(null, 99);
 
             Assert.IsNull(result);
+        }
+
+        [Test]
+        public void GetClientesByEventoAndComparecimento_ShouldThrowArgumentException_WhenIdEventoInvalid()
+        {
+            int idEvento = 0;
+            EnumIndComparecimento indComparecimento = EnumIndComparecimento.Sim;
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteEventoService.GetClientesByEventoAndComparecimento(idEvento, indComparecimento));
+
+            Assert.AreEqual("ID do evento é obrigatório.", ex.Message);
+        }
+
+        [Test]
+        public void GetClientesByEventoAndComparecimento_ShouldThrowArgumentException_WhenIndComparecimentoIsInvalid()
+        {
+            int idEvento = 1;
+            EnumIndComparecimento indComparecimento = (EnumIndComparecimento)99;
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteEventoService.GetClientesByEventoAndComparecimento(idEvento, indComparecimento));
+
+            Assert.AreEqual("O comparecimento deve ser Sim, Não, Talvez ou Organizador.", ex.Message);
+        }
+
+        [Test]
+        public void GetClientesByEventoAndComparecimento_ShouldThrowArgumentException_WhenEventoDoesNotExist()
+        {
+            int idEvento = 99;
+            EnumIndComparecimento indComparecimento = EnumIndComparecimento.Sim;
+
+            _mockEventoRepository.Setup(repo => repo.GetEventoById(idEvento)).ReturnsAsync((Evento)null); 
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _clienteEventoService.GetClientesByEventoAndComparecimento(idEvento, indComparecimento));
+
+            Assert.AreEqual("Evento associado não encontrado.", ex.Message);
         }
         #endregion
     }

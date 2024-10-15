@@ -16,9 +16,9 @@ const Login = () => {
                 senha: senha,
             });
 
-            if (response.data.success) {
+            if (response.data) {
                 //Armazena os dados do usuário para uso posterior
-                localStorage.setItem('cliente', JSON.stringify(response.data.cliente));
+                localStorage.setItem('cliente', JSON.stringify(response.data));
 
                 //Redireciona para a página principal após o login
                 navigate('/home');

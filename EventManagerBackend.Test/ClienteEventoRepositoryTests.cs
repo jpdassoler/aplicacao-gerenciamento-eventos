@@ -1,4 +1,5 @@
 ﻿using DotNetEnv;
+using EventManagerBackend.DTOs;
 using EventManagerBackend.Models;
 using EventManagerBackend.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -126,10 +127,48 @@ namespace EventManagerBackend.Test
             Assert.AreEqual(1, result.Count());
         }
 
+        [Test]
+        public async Task GetClientesByEventoAndComparecimento_ShouldReturnClientes_TesteSucesso()
+        {
+            var clientes = new List<Cliente>
+            {
+            new Cliente { Usuario = "usuario1", Nome = "Cliente 1", Senha = "xpto" },
+            new Cliente { Usuario = "usuario2", Nome = "Cliente 2", Senha = "xpto" },
+            new Cliente { Usuario = "usuario3", Nome = "Cliente 3", Senha = "xpto" }
+            };
+            _context.Clientes.AddRange(clientes);
+
+            var clienteEventos = new List<ClienteEvento>
+            {
+            new ClienteEvento { ID_Evento = 1, Usuario = "usuario1", Ind_Comparecimento = EnumIndComparecimento.Sim },
+            new ClienteEvento { ID_Evento = 1, Usuario = "usuario2", Ind_Comparecimento = EnumIndComparecimento.Não },
+            new ClienteEvento { ID_Evento = 1, Usuario = "usuario3", Ind_Comparecimento = EnumIndComparecimento.Talvez },
+            new ClienteEvento { ID_Evento = 2, Usuario = "usuario1", Ind_Comparecimento = EnumIndComparecimento.Sim }
+            };
+            _context.ClienteEventos.AddRange(clienteEventos);
+
+            _context.SaveChanges();
+
+            int idEvento = 1;
+            EnumIndComparecimento indComparecimento = EnumIndComparecimento.Sim;
+
+            var result = await _clienteEventoRepository.GetClientesByEventoAndComparecimento(idEvento, indComparecimento);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<IEnumerable<ClienteEventoDetalhesDTO>>(result);
+            Assert.AreEqual(1, result.Count());
+
+            var clienteDetalhes = result.First();
+            Assert.AreEqual("usuario1", clienteDetalhes.Usuario);
+            Assert.AreEqual("Cliente 1", clienteDetalhes.Nome);
+            Assert.AreEqual(indComparecimento, clienteDetalhes.IndComparecimento);
+        }
+
         [TearDown]
         public void TearDown()
         {
             _context.ClienteEventos.RemoveRange(_context.ClienteEventos);
+            _context.Clientes.RemoveRange(_context.Clientes);
             _context.SaveChanges();
             _context.Dispose();
         }

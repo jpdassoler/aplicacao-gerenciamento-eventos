@@ -131,6 +131,29 @@ namespace EventManagerBackend.Test
             Assert.AreEqual(400, badRequestResult.StatusCode);
         }
 
+        [Test]
+        public async Task GetClienteEventoByEventoAndComparecimento_ShouldReturnOkResult_WithClientesList_WhenParametersValid_TesteSucesso()
+        {
+            int idEvento = 1;
+            char indComparecimento = 'S';
+
+            var clientesRetornados = new List<ClienteEventoDetalhesDTO>
+            {
+            new ClienteEventoDetalhesDTO { Usuario = "usuario1", Nome = "Cliente 1", IndComparecimento = EnumIndComparecimento.Sim },
+            new ClienteEventoDetalhesDTO { Usuario = "usuario2", Nome = "Cliente 2", IndComparecimento = EnumIndComparecimento.Sim }
+            };
+
+            _mockClienteEventoService.Setup(s => s.GetClientesByEventoAndComparecimento(idEvento, EnumIndComparecimento.Sim))
+                .ReturnsAsync(clientesRetornados);
+
+            var result = await _clienteEventoController.GetClientesByEventoAndComparecimento(idEvento, indComparecimento);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(200, okResult.StatusCode);
+            Assert.AreEqual(clientesRetornados, okResult.Value);
+        }
+    
         #endregion
     }
 }

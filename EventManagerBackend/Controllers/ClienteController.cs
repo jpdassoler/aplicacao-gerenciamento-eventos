@@ -122,12 +122,12 @@ namespace EventManagerBackend.Controllers
 
             if (cliente == null)
             {
-                return NotFound(new { success = false, message = "Usuário ou senha incorretos." });
+                return NotFound("Usuário ou senha incorretos.");
             }
 
             if (cliente.Senha != loginDTO.Senha)
             {
-                return BadRequest(new { success = false, message = "Senha incorreta." });
+                return BadRequest("Senha incorreta.");
             }
 
             var clienteRetorno = new Cliente
@@ -139,7 +139,7 @@ namespace EventManagerBackend.Controllers
                 Instagram = cliente.Instagram
             };
 
-            return Ok(new { success = true, cliente = clienteRetorno });
+            return Ok(clienteRetorno);
         }
     }
 }

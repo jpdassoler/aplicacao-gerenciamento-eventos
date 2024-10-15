@@ -89,6 +89,26 @@ namespace EventManagerBackend.Test
 
             Assert.IsInstanceOf<NoContentResult>(result);
         }
+
+        [Test]
+        public async Task Login_ShouldReturnOKResult_WhenClienteIsValid_TesteSucesso()
+        {
+            var loginDTO = new LoginDTO { Usuario = "usuarioTeste", Senha = "xpto" };
+
+            var cliente = new Cliente { Usuario = "usuarioTeste", Senha = "xpto", Nome = "Fulano de tal" };
+
+            _mockClienteService.Setup(s => s.GetClienteByUsuario(loginDTO.Usuario)).ReturnsAsync(cliente);
+
+            var result = await _clienteController.Login(loginDTO);
+
+            var okResult = result as OkObjectResult;
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(200, okResult?.StatusCode);
+            var clienteRetornado = okResult.Value as Cliente;
+            Assert.IsNotNull(clienteRetornado);
+            Assert.AreEqual(cliente.Usuario, clienteRetornado.Usuario);
+            Assert.AreEqual(cliente.Nome, clienteRetornado.Nome);
+        }
         #endregion
 
         #region Teste de falha
@@ -130,6 +150,37 @@ namespace EventManagerBackend.Test
             var result = await _clienteController.UpdateCliente(usuario, cliente);
 
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
+        }
+
+        [Test]
+        public async Task Login_ShouldReturnNotFound_WhenCredentialsInvalid_TesteFalha()
+        {
+            var loginDTO = new LoginDTO { Usuario = "usuarioTeste", Senha = "xpto" };
+
+            _mockClienteService.Setup(s => s.GetClienteByUsuario(loginDTO.Usuario)).ReturnsAsync((Cliente)null);
+
+            var result = await _clienteController.Login(loginDTO);
+
+            var notFoundResult = result as NotFoundObjectResult;
+            Assert.IsNotNull(notFoundResult);
+            Assert.AreEqual(404, notFoundResult.StatusCode);
+            Assert.AreEqual("Usuário ou senha incorretos.", notFoundResult.Value);
+        }
+
+        [Test]
+        public async Task Login_ShouldReturnBadRequest_WhenSenhaIsIncorrect_TesteFalha()
+        {
+            var loginDTO = new LoginDTO { Usuario = "usuarioTeste", Senha = "senhaErrada" };
+            var cliente = new Cliente { Usuario = "usuarioTeste", Senha = "senhaCorreta", Nome = "Fulano de tal" };
+
+            _mockClienteService.Setup(s => s.GetClienteByUsuario(loginDTO.Usuario)).ReturnsAsync(cliente);
+
+            var result = await _clienteController.Login(loginDTO);
+
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.AreEqual(400, badRequestResult?.StatusCode);
+            Assert.AreEqual("Senha incorreta.", badRequestResult?.Value);
         }
         #endregion
     }
