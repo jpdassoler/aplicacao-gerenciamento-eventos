@@ -1,0 +1,26 @@
+# Ignorar arquivos de compilação
+bin/
+obj/
+
+# Ignorar dependências geradas localmente
+*.pdb
+*.log
+*.user
+*.suo
+
+# Ignorar dados de ambientes locais
+.vscode/
+.env
+.env.development
+.env.production
+
+# Ignorar configurações de IDE
+.idea/
+*.sln.DotSettings
+
+# Ignorar bibliotecas de pacotes locais
+packages/
+
+# Ignorar arquivos gerados pelo sistema operacional
+.DS_Store
+Thumbs.db

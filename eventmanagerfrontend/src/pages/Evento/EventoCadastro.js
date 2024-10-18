@@ -65,7 +65,7 @@ const EventoCadastro = () => {
                     uf: ""
                 }
             }));
-            alert("Erro ao buscar o endereço. Verifique o CEP e tente novamente");
+            alert("Erro ao buscar o endereço. Verifique o CEP e tente novamente.");
         }
     };
 
@@ -137,6 +137,8 @@ const EventoCadastro = () => {
         }
     };
 
+    const today = new Date().toISOString().split("T")[0];
+
     return (
         <div className="evento-cadastro-container">
             <h1>Cadastro de Evento</h1>
@@ -148,7 +150,7 @@ const EventoCadastro = () => {
                 <textarea id="descricao" name="descricao" value={evento.descricao} onChange={handleChange} maxLength={200}/>
                 <span className="char-counter">{evento.descricao.length}/200</span>
                 <label htmlFor="data">Data:</label>
-                <input type="date" id="data" name="data" value={evento.data} onChange={handleChange} required/>
+                <input type="date" id="data" name="data" value={evento.data} onChange={handleChange} min={today} required/>
                 <label htmlFor="banner">URL do banner:</label>
                 <input type="text" id="banner" name="banner" value={evento.banner} onChange={handleChange}/>
                 <label htmlFor="preco_ingresso">Preço do ingresso:</label>
