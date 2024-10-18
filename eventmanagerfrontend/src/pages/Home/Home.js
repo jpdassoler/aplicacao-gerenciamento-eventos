@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { fetchConfig, getApiUrl } from '../../config';
 import './Home.css';
 
 const Home = () => {
@@ -9,8 +10,12 @@ const Home = () => {
 
     useEffect(() => {
         const fetchEventos = async () => {
+            await fetchConfig();
+            const apiUrl = getApiUrl();
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/Evento`);
+                console.log('API URL:', apiUrl);
+                const response = await axios.get(`${apiUrl}/Evento`);
+                console.log('Response data:', response.data);
                 setEventos(response.data);
             } catch (error) {
                 console.error('Erro ao buscar eventos:', error.response || error.message || error);

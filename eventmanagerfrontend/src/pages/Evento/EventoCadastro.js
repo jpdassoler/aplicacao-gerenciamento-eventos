@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import InputMask from 'react-input-mask';
+import { getApiUrl } from '../../config';
 import './EventoCadastro.css';
 
 const EventoCadastro = () => {
@@ -126,8 +127,10 @@ const EventoCadastro = () => {
             }
         };
 
+        const apiUrl = getApiUrl();
+
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/Evento`, eventoData);
+            const response = await axios.post(`${apiUrl}/Evento`, eventoData);
             const eventoId = response.data.iD_Evento;
             alert("Evento cadastrado com sucesso!");
             navigate(`/evento/${eventoId}`);

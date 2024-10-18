@@ -13,7 +13,8 @@ RUN npm run build
 # Usa uma imagem nginx para servir os arquivos estáticos
 FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expor a porta 80
-EXPOSE 3000
+EXPOSE 80
 

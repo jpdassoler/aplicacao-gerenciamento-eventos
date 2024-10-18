@@ -29,8 +29,6 @@ CREATE TABLE Cliente_Evento (
     ID_Evento INT,
     Ind_Comparecimento CHAR(1) NOT NULL,
     PRIMARY KEY (Usuario, ID_Evento),
-    FOREIGN KEY (Usuario) REFERENCES Cliente(Usuario),
-    FOREIGN KEY (ID_Evento) REFERENCES Evento(ID_Evento),
     CHECK (Ind_Comparecimento IN ('O', 'S', 'N', 'T'))
 );
 

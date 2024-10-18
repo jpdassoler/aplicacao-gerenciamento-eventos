@@ -6,9 +6,11 @@ services:
       context: ./eventmanagerfrontend
       dockerfile: Dockerfile
     ports:
-      -"3000:3000"
+      - "3000:80"
     environment:
-      - REACT_APP_API_URL=http://localhost:5285/api
+      - REACT_APP_API_URL=http://backend:5285/api
+    volumes:
+      - ./eventmanagerfrontend/.env.development:/app/.env.development
     networks:
       - app-network
 
@@ -17,11 +19,26 @@ services:
       context: ./EventManagerBackend
       dockerfile: Dockerfile
     ports:
-      -"5285:5285"
+      - "5285:5285"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5285
-      - FRONTEND_URL=http://localhost:3000
+      - FRONTEND_URL=http://frontend:3000
+    volumes:
+      - ./EventManagerBackend/Environments:/app/Environments  
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_DB_USER}
+      MYSQL_PASSWORD: ${MYSQL_DB_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+    ports:
+      - "3307:3306"
     networks:
       - app-network
     

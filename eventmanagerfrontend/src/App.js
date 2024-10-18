@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ClienteCadastro from './pages/Cliente/ClienteCadastro';
 import EventoCadastro from './pages/Evento/EventoCadastro';
@@ -6,8 +6,17 @@ import Login from './pages/Login/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Home from './pages/Home/Home';
 import EventoDetalhes from './pages/Evento/EventoDetalhes';
+import { fetchConfig } from './config';
 
 function App() {
+  useEffect(() => {
+    const loadConfig = async () => {
+        await fetchConfig();
+    };
+
+    loadConfig();
+  }, []);
+
   return (
     <Router>
       <Routes>

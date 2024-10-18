@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../../config';
 import './ClienteCadastro.css';
 
 const ClienteCadastro = () => {
@@ -39,8 +40,10 @@ const ClienteCadastro = () => {
             instagram: cliente.instagram === "@" ? null : cliente.instagram
         };
 
+        const apiUrl = getApiUrl();
+
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/Cliente`, clienteData);
+            const response = await axios.post(`${apiUrl}/Cliente`, clienteData);
             alert("Cliente cadastrado com sucesso!");
             navigate("/login");
         } catch(error) {

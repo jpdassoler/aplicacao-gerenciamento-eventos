@@ -24,3 +24,5 @@ packages/
 # Ignorar arquivos gerados pelo sistema operacional
 .DS_Store
 Thumbs.db
+
+EventManagerBackend.Test/

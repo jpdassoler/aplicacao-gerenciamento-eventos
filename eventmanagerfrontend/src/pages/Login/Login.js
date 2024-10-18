@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getApiUrl } from '../../config';
 import './Login.css';
 
 const Login = () => {
     const [usuario, setUsuario] = useState('');
     const [senha, setSenha] = useState('');
     const navigate = useNavigate();
+    const apiUrl = getApiUrl();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/Cliente/login`, {
+            const response = await axios.post(`${apiUrl}/Cliente/login`, {
                 usuario: usuario,
                 senha: senha,
             });

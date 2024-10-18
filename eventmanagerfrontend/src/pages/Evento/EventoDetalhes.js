@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../../config';
 import './EventoDetalhes.css';
 
 const EventoDetalhes = () => {
@@ -11,11 +12,13 @@ const EventoDetalhes = () => {
     const [abaAtiva, setAbaAtiva] = useState("S");
 
     const navigate = useNavigate();
+    const apiUrl = getApiUrl();
 
     useEffect(() => {
         const fetchEvento = async () => {
+            
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/Evento/${id}`);
+                const response = await axios.get(`${apiUrl}/Evento/${id}`);
                 setEvento(response.data);
             } catch (error) {
                 console.error('Erro ao buscar evento:', error.response || error.message || error);
@@ -28,7 +31,7 @@ const EventoDetalhes = () => {
 
     const fetchUsuariosComparecimento = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/ClienteEvento/comparecimento/${id}/${abaAtiva}`);
+            const response = await axios.get(`${apiUrl}/ClienteEvento/comparecimento/${id}/${abaAtiva}`);
             setUsuarios(response.data);
         } catch (error) {
             console.error('Erro ao buscar usuários:', error.response || error.message || error);
@@ -49,7 +52,7 @@ const EventoDetalhes = () => {
                 navigate("/login");
             }
 
-            await axios.post(`${process.env.REACT_APP_API_URL}/ClienteEvento/`, { ID_Evento: id, Usuario: cliente.usuario, Ind_Comparecimento: status });
+            await axios.post(`${apiUrl}/ClienteEvento/`, { ID_Evento: id, Usuario: cliente.usuario, Ind_Comparecimento: status });
             alert("Comparecimento registrado.");
             fetchUsuariosComparecimento();
         } catch (error) {

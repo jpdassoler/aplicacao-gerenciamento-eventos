@@ -12,6 +12,7 @@ var projectDirectory = Directory.GetCurrentDirectory();
 if (builder.Environment.IsDevelopment())
 {
     var envFilePath = Path.Combine(projectDirectory, "Environments", ".env.development");
+    Console.WriteLine($"Loading environment variables from: {envFilePath}");
     Env.Load(envFilePath);
 } else 
 {
@@ -30,6 +31,15 @@ var connectionString = $"Server={Env.GetString("MYSQL_DB_HOST")};" +
                        $"Database={Env.GetString("MYSQL_DB_NAME")};" +
                        $"User={Env.GetString("MYSQL_DB_USER")};" +
                        $"Password={Env.GetString("MYSQL_DB_PASSWORD")};";
+
+// Adicionar um logger e registrar a connection string
+var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+logger.LogInformation("MYSQL_DB_HOST: {Host}", Env.GetString("MYSQL_DB_HOST"));
+logger.LogInformation("MYSQL_DB_USER: {User}", Env.GetString("MYSQL_DB_USER"));
+logger.LogInformation("MYSQL_DB_PASSWORD: {Password}", Env.GetString("MYSQL_DB_PASSWORD"));
+logger.LogInformation("MYSQL_DB_NAME: {Database}", Env.GetString("MYSQL_DB_NAME"));
+logger.LogInformation("Connection String: {ConnectionString}", connectionString);
+
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // Add services to the container.
