@@ -19,7 +19,7 @@ services:
       context: ./EventManagerBackend
       dockerfile: Dockerfile
     ports:
-      - "5285:5285"
+      - "5285:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5285

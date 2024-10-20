@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=build /out ./
 
 # Expor a porta que a aplicação irá usar
-EXPOSE 5285
+EXPOSE 80
 
 # Definir o comando para rodar a aplicação
 ENTRYPOINT ["dotnet", "EventManagerBackend.dll"]
