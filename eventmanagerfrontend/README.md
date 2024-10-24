@@ -1,6 +1,3 @@
-### README do Frontend
-
-```markdown
 # Frontend - Aplicação de Gerenciamento de Eventos
 
 Este é o frontend da aplicação de gerenciamento de eventos, desenvolvido em React. Ele permite a interação do usuário com o sistema, como a criação e visualização de eventos.
