@@ -1,6 +1,3 @@
-### README do Backend
-
-```markdown
 # Backend - Aplicação de Gerenciamento de Eventos
 
 Este é o backend da aplicação de gerenciamento de eventos, responsável pela lógica de negócio, autenticação e comunicação com o banco de dados MySQL.
